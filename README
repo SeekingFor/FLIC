@@ -19,7 +19,7 @@ ghost=true
 govmode=true
  - Normally FLIC will only send general events like "gotKeepAlive" or "gotIdentityFound" and events for channels/rooms this identity has joined.
  - govmode will force FLIC to send every event to this identity, regardless if it has joined the channel/room.
- - govmode can be combined with stalker or gost
+ - govmode can be combined with stalker or ghost
 
 If you ommit these 3 flags they all default to false which means FLIC will
 - announce your identity

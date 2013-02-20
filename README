@@ -1,0 +1,47 @@
+Freenet Library for Interactive Communication (FLIC)
+
+FLIC provides an easy to use general library for interactive communication over Freenet, extending the FLIP protocol by SomeDude.
+FLIC's protocol is backward compatible and uses the same namespace as FLIP itself, so users of FLIP can interact with users of FLIC.
+The idea for FLIC was born in #test @ FLIP, the name was suggested by alleykat who also wrote a short article at the Freenet Documentation Wiki.
+This library will allow other developers to write different "translators/parsers" like Jabber/XMPP, IRC, SILC, native libpurple plugins or similar.
+Those translators/parsers don't need to handle the Freenet internal stuff but instead talk to FLIC which in turn handles all the fetching and inserting.
+
+How it works:
+Freenet plugins can use the PluginTalker interface to register for FLIC events. See specs/message_format for a complete list of available messages.
+External applications can interact with FLIC using the TCP based FCP interface of Freenet and FCPPluginMessage messages.
+
+Clients need to register themself for one or more identities where some flags define the behaviour of these identities:
+stalker=true
+ - Tells FLIC to announce this identity but not to insert channel join or part messages.
+ - Messages written to a channel will be inserted, followed by a partChannel message.
+ghost=true
+ - Tells FLIC to not announce this identity. You can't write any message with identities using this flag.
+govmode=true
+ - Normally FLIC will only send general events like "gotKeepAlive" or "gotIdentityFound" and events for channels/rooms this identity has joined.
+ - govmode will force FLIC to send every event to this identity, regardless if it has joined the channel/room.
+ - govmode can be combined with stalker or gost
+
+If you ommit these 3 flags they all default to false which means FLIC will
+- announce your identity
+- inform other users when your identity joins or parts a channel/room
+- only send global events and events from channels/rooms your identity has joined
+
+Example message flow to write a message into a channel and then disconnect:
+>> ClientToFLIC: createUser     (username)
+<< FLICtoClient: createdUser    (contains freenet and rsa keypairs + username)
+>> ClientToFLIC: registerUser   (username, freenet and rsa keypairs. optional: stalker, ghost, govmode, notifyOnAnnounce flag)
+<< FLICtoClient: userRegistered (fn_key_public, status. optional: error if status == -1)
+>> ClientToFLIC: joinChannel    (fn_key_public, channel)
+<< FLICtoClient: UserList       (scope [="channel"], channel, userCount, val(userCount) entries of: x.name, x.fn_key_public, x.lastActivity, x.lastMessageTime)
+>> ClientToFLIC: sendMessage    (fn_key_public, type [="channel"], destination [=channel], message)
+[...]
+>> ClientToFLIC: partChannel    (fn_key_public, channel)
+*disconnect*
+
+If the plugin/external application handles more than one identity the correct identity can always be identified by fn_key_public on both sides.
+Global events are only sent one time to the connection, regardless of the amount of identities this connection handles.
+createUser is only needed one time for an identity. The plugin/external application need to save the keypairs for future registerUser commands.
+FLIC does not save any keypairs on disk and will never do.
+Channels/Rooms in FLIC do not have an # before the name, the messages inserted by FLIC into Freenet do. This is to keep being compatible to the FLIP protocol.
+
+FLIC currently does not support private encrypted messages as FLIP does, this will be implemented.

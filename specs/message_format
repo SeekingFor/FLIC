@@ -161,15 +161,15 @@ scope fcp identity:
 > stalker [false] (announces but does send channeljoined messages, messages written to a channel are always followed by partchannel)
 > ghost [false] (does not announce at all, can't write channel or private messages)
 > govmode [false] (receives all events, even when not in the channel)
-> notifyOnAnnounce [true] (sends an additional [userRegistered with status 1 after announce has been inserted])
+> notifyOnAnnounce [true] (sends an additional [userRegistered] with status 1 after announce has been inserted)
 
 [changeNick] (does not return anything)
 > fn_key_public
 > newNick
 
 [joinChannel] (returns [UserList] of channel)
-> channel
 > fn_key_public
+> channel
 
 [partChannel] (does not return anything)
 > fn_key_public

@@ -1,0 +1,206 @@
+===================================
+Server to client:
+===================================
+
+scope fcp connection:
+---------------------
+
+[createdUser]
+> username
+> fn_key_public
+> fn_key_private
+> rsa_key_public
+> rsa_key_private
+
+[ChannelList]
+> scope=global|user [global]
+> userKey [opt]
+> channelCount
+> x.name
+> x.topic
+> x.users
+
+[UserList]
+> scope=channel|global
+> channel [opt]
+> userCount
+> x.name
+> x.fn_key_public
+> x.lastActivity
+> x.lastMessageTime
+
+[gotIdentityFound]
+> userKey
+> userName
+> timestamp
+
+[gotChannelFound]
+> channel
+> timestamp
+
+[gotNickChanged]
+> userKey
+> oldUserName
+> newUserName
+> timestamp
+
+[gotTopicChange]
+> fromUserKey (can be empty)
+> channel
+> automaticTopicPropagation
+> newTopic
+> timestamp
+
+[gotKeepAlive]
+> fromUserKey
+> timeStamp
+
+[pong] (will not be transmitted to freenet, does not require a reply)
+> identifier
+
+[ping] (will not be transmitted to freenet, requires reply [pong] with same identifier)
+> identifier
+
+# not yet implemented
+[gotUserModeGlobalChange]
+> fromUserKey
+> targetUserKey
+> newMode
+> timestamp
+
+[notSupported]
+> oldCommand
+> [...]
+
+[error]
+> oldCommand
+> description
+> [...]
+
+scope fcp identity:
+-------------------
+
+[userRegistered]
+> fn_key_public
+> status (enum -1 error, 0 message received, 1 announced)
+> error [opt]
+
+[gotChannelJoin]
+> fn_key_public
+> channel
+> userKey
+> timestamp
+
+[gotChannelPart]
+> fn_key_public
+> channel
+> userKey
+> timedOut
+> timestamp
+
+[gotMessage]
+> fn_key_public
+> fromUserKey
+> type=user|channel
+> destination=userKey|channelName
+> thirdPerson
+> message
+> timestamp
+
+# not yet implemented
+[gotChannelModeChange]
+> fn_key_public
+> fromUserKey
+> channel
+> newMode
+> timestamp
+
+# not yet implemented
+[gotUserModeInChannelChange]
+> fn_key_public
+> fromUserKey
+> channel
+> targetUserKey
+> newMode
+> timestamp
+
+===================================
+Client to server:
+===================================
+
+scope fcp connection:
+---------------------
+
+[createUser] (returns [createdUser], usually after generating all keys)
+> username
+
+[getChannelList] (returns [ChannelList])
+> scope=global|user [global]
+> userKey [opt]
+
+[getUserList] (returns [UserList] with given scope)
+> scope=channel|global
+> channel [opt]
+
+[pong] (will not be transmitted to freenet, does not return anything)
+> identifier
+
+[ping] (will not be transmitted to freenet, returns [pong] with same identifier)
+> identifier
+
+
+scope fcp identity:
+-------------------
+
+[registerUser] (returns [userRegistered])
+> username
+> fn_key_public
+> fn_key_private
+> rsa_key_public
+> rsa_key_private
+> stalker [false] (announces but does send channeljoined messages, messages written to a channel are always followed by partchannel)
+> ghost [false] (does not announce at all, can't write channel or private messages)
+> govmode [false] (receives all events, even when not in the channel)
+> notifyOnAnnounce [true] (sends an additional [userRegistered with status 1 after announce has been inserted])
+
+[changeNick] (does not return anything)
+> fn_key_public
+> newNick
+
+[joinChannel] (returns [UserList] of channel)
+> channel
+> fn_key_public
+
+[partChannel] (does not return anything)
+> fn_key_public
+> channel
+
+[sendMessage] (does not return anything)
+> fn_key_public
+> type=user|channel
+> destination=userKey|channel
+> message
+
+[changeTopic] (does not return anything)
+> fn_key_public
+> channel
+> newTopic
+
+# not yet implemented
+[changeChannelMode] (does not return anything)
+> fn_key_public
+> channel
+> newMode
+
+# not yet implemented
+[changeUserModeInChannel] (does not return anything)
+> fn_key_public
+> channel
+> targetUserKey
+> newMode
+
+# not yet implemented
+[changeUserModeGlobal] (does not return anything)
+> fn_key_public
+> targetUserKey
+> newMode

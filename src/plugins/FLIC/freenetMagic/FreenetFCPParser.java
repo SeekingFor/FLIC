@@ -955,6 +955,8 @@ public class FreenetFCPParser extends Thread {
 	}
 	
 	private void parseEvent(SimpleFieldSet event) {
+		// FIXME: add general validation based on command => event.get("x") != null
+		// TODO: only use two functions (sendGlobal and sendSelective)?
 		if("gotIdentityFound".equals(event.get("command"))) {
 			parseGotIdentityFound(event);
 		} else if("gotChannelFound".equals(event.get("command"))) {
@@ -1032,6 +1034,7 @@ public class FreenetFCPParser extends Thread {
 	
 	private void parseGotChannelJoin(SimpleFieldSet event) {
 		// check for each fcp ident who is interested in this event
+		String channel = "#" + event.get("channel");
 		fcp_ident fcpIdent;
 		String ident;
 		Iterator<String> iter = fcpIdents.keySet().iterator();
@@ -1039,7 +1042,7 @@ public class FreenetFCPParser extends Thread {
 			ident = iter.next();
 			fcpIdent = fcpIdents.get(ident);
 			if (fcpIdent.replySender != null) {
-				if(fcpIdent.govMode || mStorage.userMap.get(ident).channels.contains(event.get("channel"))) {
+				if(fcpIdent.govMode || mStorage.userMap.get(ident).channels.contains(channel)) {
 					event.putSingle("fn_key_public", ident);
 					try {
 						fcpIdent.replySender.send(event);
@@ -1056,6 +1059,7 @@ public class FreenetFCPParser extends Thread {
 	
 	private void parseGotChannelPart(SimpleFieldSet event) {
 		// check for each fcp ident who is interested in this event
+		String channel = "#" + event.get("channel");
 		fcp_ident fcpIdent;
 		String ident;
 		Iterator<String> iter = fcpIdents.keySet().iterator();
@@ -1063,7 +1067,7 @@ public class FreenetFCPParser extends Thread {
 			ident = iter.next();
 			fcpIdent = fcpIdents.get(ident);
 			if (fcpIdent.replySender != null) {
-				if(fcpIdent.govMode || mStorage.userMap.get(ident).channels.contains(event.get("channel"))) {
+				if(fcpIdent.govMode || mStorage.userMap.get(ident).channels.contains(channel)) {
 					event.putSingle("fn_key_public", ident);
 					try {
 						fcpIdent.replySender.send(event);
@@ -1087,6 +1091,7 @@ public class FreenetFCPParser extends Thread {
 			String ident = event.get("destination");
 			if(fcpIdents.containsKey(ident))	{
 				fcpIdent = fcpIdents.get(ident);
+				// TODO: rsa decrypt message based on senders public and fcpIdents private rsa_key
 				if (fcpIdent.replySender != null) {
 					event.putSingle("fn_key_public", ident);
 					try {
@@ -1099,15 +1104,16 @@ public class FreenetFCPParser extends Thread {
 					}
 				}
 			}
-		} else {
+		} else if("channel".equals(event.get("type"))) {
 			// channel message
+			String channel = "#" + event.get("destination");
 			String ident;
 			Iterator<String> iter = fcpIdents.keySet().iterator();
 			while(iter.hasNext()) {
 				ident = iter.next();
 				fcpIdent = fcpIdents.get(ident);
 				if (fcpIdent.replySender != null) {
-					if(fcpIdent.govMode || mStorage.userMap.get(ident).channels.contains(event.get("channel"))) {
+					if(fcpIdent.govMode || mStorage.userMap.get(ident).channels.contains(channel)) {
 						event.putSingle("fn_key_public", ident);
 						try {
 							fcpIdent.replySender.send(event);
@@ -1120,6 +1126,8 @@ public class FreenetFCPParser extends Thread {
 					}
 				}
 			}
+		} else {
+			// uh? type != channel && != user
 		}
 	}
 	

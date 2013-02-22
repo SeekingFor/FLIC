@@ -1043,9 +1043,10 @@ public class FreenetFCPParser extends Thread {
 			fcpIdent = fcpIdents.get(ident);
 			if (fcpIdent.replySender != null) {
 				if(fcpIdent.govMode || mStorage.userMap.get(ident).channels.contains(channel)) {
-					event.putSingle("fn_key_public", ident);
+					SimpleFieldSet sendEvent = new SimpleFieldSet(event);
+					sendEvent.putSingle("fn_key_public", ident);
 					try {
-						fcpIdent.replySender.send(event);
+						fcpIdent.replySender.send(sendEvent);
 					} catch (PluginNotFoundException e) {
 						// fcp connection disconnected
 						// replySender will be set again on next registerFCPidentity
@@ -1068,9 +1069,10 @@ public class FreenetFCPParser extends Thread {
 			fcpIdent = fcpIdents.get(ident);
 			if (fcpIdent.replySender != null) {
 				if(fcpIdent.govMode || mStorage.userMap.get(ident).channels.contains(channel)) {
-					event.putSingle("fn_key_public", ident);
+					SimpleFieldSet sendEvent = new SimpleFieldSet(event);
+					sendEvent.putSingle("fn_key_public", ident);
 					try {
-						fcpIdent.replySender.send(event);
+						fcpIdent.replySender.send(sendEvent);
 					} catch (PluginNotFoundException e) {
 						// fcp connection disconnected
 						// replySender will be set again on next registerFCPidentity 
@@ -1093,9 +1095,10 @@ public class FreenetFCPParser extends Thread {
 				fcpIdent = fcpIdents.get(ident);
 				// TODO: rsa decrypt message based on senders public and fcpIdents private rsa_key
 				if (fcpIdent.replySender != null) {
-					event.putSingle("fn_key_public", ident);
+					SimpleFieldSet sendEvent = new SimpleFieldSet(event);
+					sendEvent.putSingle("fn_key_public", ident);
 					try {
-						fcpIdent.replySender.send(event);
+						fcpIdent.replySender.send(sendEvent);
 					} catch (PluginNotFoundException e) {
 						// fcp connection disconnected
 						// replySender will be set again on next registerFCPidentity
@@ -1114,9 +1117,10 @@ public class FreenetFCPParser extends Thread {
 				fcpIdent = fcpIdents.get(ident);
 				if (fcpIdent.replySender != null) {
 					if(fcpIdent.govMode || mStorage.userMap.get(ident).channels.contains(channel)) {
-						event.putSingle("fn_key_public", ident);
+						SimpleFieldSet sendEvent = new SimpleFieldSet(event);
+						sendEvent.putSingle("fn_key_public", ident);
 						try {
-							fcpIdent.replySender.send(event);
+							fcpIdent.replySender.send(sendEvent);
 						} catch (PluginNotFoundException e) {
 							// fcp connection disconnected
 							// replySender will be set again on next registerFCPidentity

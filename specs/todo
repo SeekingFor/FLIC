@@ -1,22 +1,27 @@
 timestamp for keepalive + message from message itself instead of using new Date().getTime()?
 
 think about last activity + timeout for users that are announced but not joined a channel
+
 how to convert irc colors and [b], [i], [u]?
 
 why the fuck does flip wait for new identity message after inactive > x (30?)
 
 escape \ in fcp commands and flic events (simpleFieldSets) replace("\\\\", "\\\\")
+
 validate nicknames before accepting them
 validate channels before accepting them
 
 recheck fcp interface <=> actual messages
-especially #chan != chan
 
 automatic topic propagation
 
 replace all the for x : y with iterators
 done:
 > FCPparser
+
+npe in processregisteruser fcpparser:661
+^ check all FCPevents for needed fields based on command
+
 
 client to server
 ==================================================

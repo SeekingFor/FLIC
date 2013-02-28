@@ -8,6 +8,7 @@ Those translators/parsers don't need to handle the Freenet internal stuff but in
 
 How it works:
 Freenet plugins can use the PluginTalker interface to register for FLIC events. See specs/message_format for a complete list of available messages.
+The message needs to be written as list of key=value pairs. The first line for each message is the [command] and need to be written as command=command.
 External applications can interact with FLIC using the TCP based FCP interface of Freenet and FCPPluginMessage messages.
 
 Clients need to register themself for one or more identities where some flags define the behaviour of these identities:

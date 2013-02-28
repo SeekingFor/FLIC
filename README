@@ -1,7 +1,7 @@
 Freenet Library for Interactive Communication (FLIC)
 
 FLIC provides an easy to use general library for interactive communication over Freenet, extending the FLIP protocol by SomeDude.
-FLIC is a Freenet plugin. It's protocol is backward compatible, and uses the same namespace as FLIP itself, so users of FLIP can interact with users of FLIC.
+FLIC is a Freenet plugin. It's protocol is backward compatible and uses the same namespace as FLIP itself, so users of FLIP can interact with users of FLIC.
 The idea for FLIC was born in #test @ FLIP, the name was suggested by alleykat who also wrote a short article at the Freenet Documentation Wiki.
 This library will allow other developers to write different "translators/parsers" like Jabber/XMPP, IRC, SILC, native libpurple plugins or similar.
 Those translators/parsers don't need to handle the Freenet internal stuff but instead talk to FLIC which in turn handles all the fetching and inserting.

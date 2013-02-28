@@ -15,6 +15,9 @@ recheck fcp interface <=> actual messages
 
 automatic topic propagation
 
+=> on reregister: latest fetched announce date != mStorage.getCurrentDateString => reset identity and message editions for this identity.
+^ should be handled by default UTC check, why does it not handle this correctly for currently inactive fcp_clients?
+
 replace all the for x : y with iterators
 done:
 > FCPparser

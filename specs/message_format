@@ -89,18 +89,21 @@ scope fcp identity:
 > fn_key_public
 > channel
 > userKey
+> currentNick
 > timestamp
 
 [gotChannelPart]
 > fn_key_public
 > channel
 > userKey
+> currentNick
 > timedOut
 > timestamp
 
 [gotMessage]
 > fn_key_public
 > fromUserKey
+> currentNick
 > type=user|channel
 > destination=userKey|channelName
 > thirdPerson

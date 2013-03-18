@@ -237,6 +237,7 @@ public class FreenetMessageParser extends Thread {
 					event = new SimpleFieldSet(true);
 					event.putSingle("command", "gotMessage");
 					event.putSingle("fromUserKey", message.ident);
+					event.putSingle("currentNick", mStorage.userMap.get(message.ident).nick);
 					event.putSingle("type", "channel");
 					event.putSingle("destination", channel.substring(1, channel.length()));
 					event.putSingle("thirdPerson", Boolean.toString(thirdPerson));

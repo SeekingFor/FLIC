@@ -219,6 +219,7 @@ public class RAMstore {
 			event.putSingle("command", "gotChannelJoin");
 			event.putSingle("channel", channel.substring(1, channel.length()));
 			event.putSingle("userKey", requestKey);
+			event.putSingle("currentNick", userMap.get(requestKey).nick);
 			event.putSingle("timestamp", Long.toString(new Date().getTime()));
 			mPtrWorker.getFCPParser().addFLICevent(event);
 			//addStatus("gotChannelJoin\n--channelName=" + channel + "\n--userKey=" + requestKey + "\n--timestamp=" + new Date().getTime() + "\nEndMessage");
@@ -240,6 +241,7 @@ public class RAMstore {
 			event.putSingle("command", "gotChannelPart");
 			event.putSingle("channel", channel.substring(1, channel.length()));
 			event.putSingle("userKey", requestKey);
+			event.putSingle("currentNick", userMap.get(requestKey).nick);
 			event.putSingle("timedOut", timeout.toString());
 			event.putSingle("timestamp", Long.toString(new Date().getTime()));
 			mPtrWorker.getFCPParser().addFLICevent(event);

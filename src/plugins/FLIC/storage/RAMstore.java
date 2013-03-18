@@ -266,28 +266,25 @@ public class RAMstore {
 		// 1000 ms * 60 seconds * 17 minutes
 		long datetimeToKick = new Date().getTime() - 17 * 60 * 1000;
 		String ident;
-		Iterator<String> iter = knownIdents.iterator();
-		Iterator<String> chanIter;
-		while (iter.hasNext()) {
-			ident = iter.next();
-			if(userMap.get(ident).lastActivity < datetimeToKick && userMap.get(ident).channelCount > 0) {
-				chanIter = userMap.get(ident).channels.iterator();
-				while(chanIter.hasNext()) {
-					try {
-						removeUserFromChannel(ident, chanIter.next(), true);
-					} catch (ConcurrentModificationException e) {
-						chanIter = userMap.get(ident).channels.iterator();
-						while(chanIter.hasNext()) {
-							try {
-								removeUserFromChannel(ident, chanIter.next(), true);
-							} catch (ConcurrentModificationException e1) {
-								// give up and finish cleaning channels for this user on the next run
-								break;
-							}
-						}
+		List<String> toRemove = new ArrayList<String>();
+		try {
+			Iterator<String> iter = knownIdents.iterator();
+			Iterator<String> chanIter;
+			while (iter.hasNext()) {
+				ident = iter.next();
+				if(userMap.get(ident).lastActivity < datetimeToKick && userMap.get(ident).channelCount > 0) {
+					chanIter = userMap.get(ident).channels.iterator();
+					while(chanIter.hasNext()) {
+						toRemove.add(chanIter.next());
 					}
+					for (String chan : toRemove) {
+						removeUserFromChannel(ident, chan, true);
+					}
+					toRemove.clear();
 				}
 			}
+		} catch (ConcurrentModificationException e) {
+			// ignore. we can do it the next time
 		}
 	}
 	public Boolean isNickInUseByOtherIdentity(String requestKey, String nick) {
